@@ -5,7 +5,6 @@ from fabric.contrib import files
 
 # floaty get centos-7-x86_64
 env.user = 'root'
-env.key_filename = '/Users/jayson.barley/.ssh/id_rsa-acceptance'
 
 # _run = run
 
@@ -34,17 +33,17 @@ def run_frankenbuild(args):
 
         run("tmux send-keys './frankenbuilder {}'".format(args))
         run('tmux send-keys ENTER')
-        
+
 @task
 def install_acceptance_tests():
     run('gem install beaker')
-    put('~/.ssh', '~/', mirror_local_mode=True)
+    put(env.key_filename, '~/.ssh')
     run('git clone git@github.com:puppetlabs/pe_acceptance_tests.git')
 
 
 @task
 def install_frankenbuilder():
-    put('~/.ssh', '~/', mirror_local_mode=True)
+    put(env.key_filename, '~/.ssh')
     run('git clone git@github.com:puppetlabs/frankenbuilder.git')
 
 
@@ -62,7 +61,7 @@ def install_rbenv():
 def install_ruby(version='2.4.2'):
     run('rbenv install -s {}'.format(version))
     run('rbenv global {}'.format(version))
-        
+
     run('gem install bundle')
 
 

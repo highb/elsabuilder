@@ -1,5 +1,6 @@
 import json
 import os
+import string
 import sys
 
 import click
@@ -27,7 +28,7 @@ def cli(debug):
 def frankenbuild(host, args):
     largs = list(args)
     dirs_to_upload = []
-    
+
     for i,arg in enumerate(largs):
         if '=' in arg:
             k,v = arg.split('=')
@@ -36,7 +37,11 @@ def frankenbuild(host, args):
                 largs[i] = '='.join([k, remote_dir])
                 dirs_to_upload.append(v)
 
-    run(largs, dirs_to_upload, host)
+    keyfile = (arg for arg in largs if arg.startswith('--keyfile')).next()
+    if keyfile:
+        run(largs, dirs_to_upload, host, string.split(keyfile, '=')[1])
+    else:
+        run(largs, dirs_to_upload, host)
 
 
 @cli.command()

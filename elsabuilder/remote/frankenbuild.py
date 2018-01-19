@@ -6,7 +6,9 @@ from fabric.contrib.project import rsync_project
 from sh import floaty
 
 
-def run(args, upload_dirs=[], host=None):
+def run(args, upload_dirs=[], host=None, keyfile='~/.ssh/id_rsa-acceptance'):
+    env.key_filename = keyfile
+    
     if not host:
         arch = 'centos-7-x86_64'
         res = floaty.get(arch)
